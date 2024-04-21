@@ -39,12 +39,19 @@ REST API Endpoints: Send HTTP requests to the API endpoints using tools like cUR
 Technologies Used:
 
 Java
+
 Spring Boot
+
 Spring MVC
+
 Spring Data JPA
+
 MySQL
+
 HTML
+
 RESTful API
+
 Thymeleaf
 
 Credits
