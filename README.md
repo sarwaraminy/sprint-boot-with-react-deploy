@@ -1,5 +1,7 @@
 Spring Boot MVC and REST API Project
+
 Overview
+
 This project demonstrates the implementation of a Spring Boot application that combines both MVC (Model-View-Controller) and REST API functionalities. The application interacts with a remote MySQL database and includes components such as entities, repositories, services, API controllers, and HTML views.
 
 Features
