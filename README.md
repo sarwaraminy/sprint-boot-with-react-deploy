@@ -18,7 +18,9 @@ Installation
 Clone the repository to your local machine:
 bash
 Copy code
+
 git clone https://github.com/sarwaraminy/spring-boot-mvc.git
+
 Open the project in your preferred IDE (Integrated Development Environment), such as IntelliJ IDEA or Eclipse.
 Configure the application properties (application.properties or application.yml) to specify the MySQL database connection details.
 Run the application:
