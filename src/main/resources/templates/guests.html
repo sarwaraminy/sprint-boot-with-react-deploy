@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function deleteGuest(id) {
+        $.ajax({
+            url: '/guests/view/delete/' + id,
+            type: 'POST',
+            success: function(result) {
+            	location.reload(); // Reload the page
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+            }
+        });
+    }
+</script>
+    <title>Guests List</title>
+</head>
+<body>
+    <h1>Guests List</h1>
+    
+    <table border="1" class="scrollable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email Address</th>
+                <th>Country</th>
+                <th>State</th>
+                <th>Phone Number</th>
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Iterate over each guest in the guests list -->
+            <tr th:each="guest : ${guestList}">
+                <!-- Display guest information in table cells -->
+                <td th:text="${guest.id}">-</td>
+                <td th:text="${guest.firstName}">-</td>
+                <td th:text="${guest.lastName}">-</td>
+                <td th:text="${guest.email}">-</td>
+                <td th:text="${guest.country}">-</td>
+                <td th:text="${guest.state}">-</td>
+                <td th:text="${guest.phone}">-</td>
+                <td><a th:href="@{'view/edit/' + ${guest.id}}">Edit</a></td>
+                <td><a href="#" th:onclick="'deleteGuest(\'' + ${guest.id} + '\');'">Delete</a></td>
+
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

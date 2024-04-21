@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Room tabale template</title></head>
+<body>
+ <h1>Welcome to Room table data testing from mysql</h1>
+ <!-- check if the room is empty -->
+ <table th:if="${#lists.isEmpty(roomList)}">
+   <tr><td>No rooms found</td></tr>
+ </table>
+ <table th:unless="${#lists.isEmpty(roomList)}">
+   <tr>
+     <td>Room ID</td>
+     <td>Room Name</td>
+     <td>Room Number</td>
+     <td>Bed Information</td>
+   </tr>
+   <tr th:each="room: ${roomList}">
+     <td th:text="${room.id}">-</td>
+     <td th:text="${room.name}">-</td>
+     <td th:text="${room.roomNumber}">-</td>
+     <td th:text="${room.bedInfo}">-</td>
+   </tr>
+ </table>
+</body>
+</html>
