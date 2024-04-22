@@ -74,23 +74,18 @@ public class GuestControllerView {
 		}
 	}
 	//update records
-	@PostMapping("/edit/{id}")
-	public String updateGuest(@PathVariable long id,  @ModelAttribute Guest guestDetail) {
-		Guest guest = guestService.getGuestById(id);
-		if(guest != null) {
-			guest.setId(guestDetail.getId());
-			guest.setFirstName(guestDetail.getFirstName());
-			guest.setLastName(guestDetail.getLastName());
-			guest.setCountry(guestDetail.getCountry());
-			guest.setEmail(guestDetail.getEmail());
-			guest.setPhone(guestDetail.getPhone());
-			guest.setState(guestDetail.getState());
-			
-			guestService.saveGuest(guest);
-		}
-
-		return "redirect:/guests/view";
+	@PostMapping("/edit")
+	public String updateGuest(@ModelAttribute Guest guest, RedirectAttributes redirectAttributes) {
+	    try {
+	        guestService.saveGuest(guest);
+	        redirectAttributes.addFlashAttribute("successMessage", "Guest updated successfully.");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "Failed to update guest. Please try again.");
+	        e.printStackTrace(); // Log the exception for debugging purposes
+	    }
+	    return "redirect:/guests/view";
 	}
+
 	
 	//delete a guest
 	@PostMapping("/delete/{id}")

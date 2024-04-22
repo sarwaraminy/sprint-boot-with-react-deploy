@@ -1,7 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +7,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.data.Guest;
 import com.example.demo.data.Room;
 import com.example.demo.services.RoomService;
 
@@ -42,37 +40,52 @@ public class RoomControllerView {
 		}
 	}
 	
-	//add value into Guest
-		@PostMapping("/add")
-		public String createRoom(@ModelAttribute Room room) {
-			roomService.saveRoom(room);
-			return "redirect:/rooms/view";
+	//show the add view of room
+	@GetMapping("/add")
+	public String showAddRoom(Model model) {
+		model.addAttribute("room", new Room());
+		return "add-room";
+	}
+	//add value into Room
+	@PostMapping("/add")
+	public String createRoom(@ModelAttribute Room room) {
+		roomService.saveRoom(room);
+		return "redirect:/rooms/view";
+	}
+	
+	//show the edit page for room
+	@GetMapping("/edit/{id}")
+	public String showRoomEdit(@PathVariable long id, Model model) {
+		Room room  = roomService.getRoomById(id);
+		if(room != null) {
+			model.addAttribute("room", room);
+			return "edit-room";
+		} else {
+			return  "redirect:rooms/view";
 		}
+	}
 		
 		//update records
-		@PostMapping("/{id}/edit")
-		public String updateGuest(@PathVariable long id,  @ModelAttribute Room roomDetail) {
-			Room room = roomService.getRoomById(id);
-			if(room != null) {
-				room.setId(roomDetail.getId());
-				room.setName(roomDetail.getName());
-				room.setRoomNumber(roomDetail.getRoomNumber());
-				room.setBedInfo(roomDetail.getBedInfo());
-				
+		@PostMapping("/edit")
+		public String updateGuest(@ModelAttribute Room room, RedirectAttributes redirectAttributes) {
+			try {
 				roomService.saveRoom(room);
+				redirectAttributes.addFlashAttribute("successMessage", "Room updated successfully.");
+			} catch (Exception e) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Failed to update room.");
+				e.printStackTrace();
 			}
-
 			return "redirect:/rooms/view";
 		}
 		
 		//delete a room
-		@PostMapping("/{id}/delete")
+		@PostMapping("/delete/{id}")
 		public String deleteGuest(@PathVariable long id) {
 			Room room = roomService.getRoomById(id);
 			if(room != null) {
 				roomService.deleteRoom(id);
 			}
-			return "redirect:/guests/view";
+			return "redirect:/rooms/view";
 		}
 	
 }

@@ -1,26 +1,61 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Room tabale template</title></head>
+<head>
+    <title>Room table template</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .scrollable-div {
+            max-height: 500px; /* Adjust this value as needed */
+            overflow-y: auto;
+        }
+        .fixed-header th {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 1;
+        }
+    </style>
+</head>
 <body>
- <h1>Welcome to Room table data testing from mysql</h1>
- <!-- check if the room is empty -->
- <table th:if="${#lists.isEmpty(roomList)}">
-   <tr><td>No rooms found</td></tr>
- </table>
- <table th:unless="${#lists.isEmpty(roomList)}">
-   <tr>
-     <td>Room ID</td>
-     <td>Room Name</td>
-     <td>Room Number</td>
-     <td>Bed Information</td>
-   </tr>
-   <tr th:each="room: ${roomList}">
-     <td th:text="${room.id}">-</td>
-     <td th:text="${room.name}">-</td>
-     <td th:text="${room.roomNumber}">-</td>
-     <td th:text="${room.bedInfo}">-</td>
-   </tr>
- </table>
+    <div class="container">
+        <h1>Welcome to Room table data testing from MySQL</h1>
+        <div><a href="rooms/view/add" class="btn btn-success mb-3">Add a new Room</a></div>
+        <!-- check if the room is empty -->
+        <div class="scrollable-div">
+            <table class="table">
+                <thead class="thead-dark fixed-header">
+                    <tr>
+                        <th>Room ID</th>
+                        <th>Room Name</th>
+                        <th>Room Number</th>
+                        <th>Bed Information</th>
+                        <th colspan="2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iterate over each room in the room list -->
+                    <tr th:each="room: ${roomList}">
+                        <!-- Display room information in table cells -->
+                        <td th:text="${room.id}">-</td>
+                        <td th:text="${room.name}">-</td>
+                        <td th:text="${room.roomNumber}">-</td>
+                        <td th:text="${room.bedInfo}">-</td>
+                        <td><a th:href="@{'rooms/view/edit/' + ${room.id}}" class="btn btn-primary">Edit</a></td>
+                        <td>
+                            <form th:action="@{'rooms/view/delete/' + ${room.id}}" method="post">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
