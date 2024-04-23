@@ -37,21 +37,15 @@ MVC Views: Navigate to the HTML views using a web browser to interact with the a
 REST API Endpoints: Send HTTP requests to the API endpoints using tools like cURL or Postman to interact with the application programmatically.
 
 Technologies Used:
-
 Java
-
 Spring Boot
-
 Spring MVC
-
 Spring Data JPA
-
 MySQL
-
 HTML
-
+Bootstrap
+jQuery
 RESTful API
-
 Thymeleaf
 
 Credits
