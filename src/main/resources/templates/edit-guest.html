@@ -8,7 +8,7 @@
 <body>
     <div class="container">
         <h1 class="mt-4">Edit Guest</h1>
-        <form action="/guests/view/edit" method="post">
+        <form id="editGuestForm">
             <!-- Hidden field for guest ID -->
             <input type="hidden" name="id" th:value="${guest.id}">
             
@@ -42,8 +42,8 @@
                 <input type="text" class="form-control" id="state" name="state" th:value="${guest.state}">
             </div>
             
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <a href="/guests/view" class="btn btn-secondary">Cancel</a>
+            <button type="button" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
+            <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
         </form>
     </div>
 
@@ -51,5 +51,42 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Function to handle Save Changes button click
+            $('#saveChangesBtn').click(function() {
+                // Serialize form data
+                var formData = $('#editGuestForm').serialize();
+                
+                // Make AJAX request to submit form data
+                $.ajax({
+                    url: '/guests/view/edit',
+                    type: 'POST',
+                    data: formData,
+                    success: function(data) {
+                    	// Reload content of right-side content area with updated rooms information
+                        $('.content').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error); // Log any errors
+                    }
+                });
+            });
+         // Cancel button handler
+            $('#cancelBtn').click(function(){
+            	$.ajax({
+            		url: '/guests/view',
+            		type: 'GET',
+            		 success: function(data) {
+                         // Reload content of right-side content area with updated rooms information
+                         $('.content').html(data);
+                     },
+                     error: function(xhr, status, error) {
+                         console.error('Error:', error); // Log any errors
+                     }            		
+            	});
+            });
+        });
+    </script>
 </body>
 </html>

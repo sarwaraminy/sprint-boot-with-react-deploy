@@ -20,8 +20,7 @@
 <body>
     <div class="container">
         <h1 class="mt-4">Guests List</h1>
-        <div><a href="view/add" class="btn btn-success">Add a new Guest</a></div>
-        
+        <div><button id="addGuestBtn" class="btn btn-success mb-3">Add a new Guest</button></div>
         <!-- Make the table scrollable -->
         <div class="scrollable-table">
             <table class="table table-bordered mt-4">
@@ -48,12 +47,8 @@
                         <td th:text="${guest.country}">-</td>
                         <td th:text="${guest.state}">-</td>
                         <td th:text="${guest.phone}">-</td>
-                        <td><a th:href="@{'guests/view/edit/' + ${guest.id}}" class="btn btn-primary">Edit</a></td>
-                        <td>
-                            <form th:action="@{'guests/view/delete/' + ${guest.id}}" method="post">
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        </td>
+                        <td><button class="btn btn-primary editGuestBtn" th:attr="data-guest-id=${guest.id}">Edit</button></td>
+                        <td><button class="btn btn-danger deleteGuestBtn" th:attr="data-guest-id=${guest.id}">Delete</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -64,5 +59,54 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            // Function to handle Add Guest button click
+            $('#addGuestBtn').click(function() {
+                $.ajax({
+                    url: 'guests/view/add',
+                    dataType: 'html',
+                    success: function(data) {
+                        $('.content').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            // Function to handle Edit Guest button click
+            $(document).on('click', '.editGuestBtn', function() {
+                var roomId = $(this).data('guest-id');
+                $.ajax({
+                    url: 'guests/view/edit/' + roomId,
+                    dataType: 'html',
+                    success: function(data) {
+                        $('.content').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+               });
+            });
+           
+           // Function to handle Delete button click
+           $(document).on('click', '.deleteGuestBtn', function(){
+        	   var roomId = $(this).data('guest-id');
+        	   
+        	   // make AJAX request to delete guest
+        	   $.ajax({
+        		   url: '/guests/view/delete/' + roomId,
+        		   type: 'POST',
+        		   success: function(data){
+        			   $('.content').html(data);
+        		   },
+        		   error: function(xhr, status, error) {
+        			   console.error('Error:', error);
+        		   }
+        	   });
+           });
+        });
+    </script>
 </body>
 </html>

@@ -20,7 +20,7 @@
 <body>
     <div class="container">
         <h1>Welcome to Room table data testing from MySQL</h1>
-        <div><a href="rooms/view/add" class="btn btn-success mb-3">Add a new Room</a></div>
+        <div><button id="addRoomBtn" class="btn btn-success mb-3">Add a new Room</button></div>
         <!-- check if the room is empty -->
         <div class="scrollable-div">
             <table class="table">
@@ -41,12 +41,8 @@
                         <td th:text="${room.name}">-</td>
                         <td th:text="${room.roomNumber}">-</td>
                         <td th:text="${room.bedInfo}">-</td>
-                        <td><a th:href="@{'rooms/view/edit/' + ${room.id}}" class="btn btn-primary">Edit</a></td>
-                        <td>
-                            <form th:action="@{'rooms/view/delete/' + ${room.id}}" method="post">
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        </td>
+                        <td><button class="btn btn-primary editRoomBtn" th:attr="data-room-id=${room.id}">Edit</button></td>
+                        <td><button class="btn btn-danger deleteRoomBtn" th:attr="data-room-id=${room.id}">Delete</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -57,5 +53,54 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Function to handle Add Room button click
+            $('#addRoomBtn').click(function() {
+                $.ajax({
+                    url: 'rooms/view/add',
+                    dataType: 'html',
+                    success: function(data) {
+                        $('.content').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            // Function to handle Edit Room button click
+            $(document).on('click', '.editRoomBtn', function() {
+                var roomId = $(this).data('room-id');
+                $.ajax({
+                    url: 'rooms/view/edit/' + roomId,
+                    dataType: 'html',
+                    success: function(data) {
+                        $('.content').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+               });
+            });
+           
+           // Function to handle Delete button click
+           $(document).on('click', '.deleteRoomBtn', function(){
+        	   var roomId = $(this).data('room-id');
+        	   
+        	   // make AJAX request to delete room
+        	   $.ajax({
+        		   url: '/rooms/view/delete/' + roomId,
+        		   type: 'POST',
+        		   success: function(data){
+        			   $('.content').html(data);
+        		   },
+        		   error: function(xhr, status, error) {
+        			   console.error('Error:', error);
+        		   }
+        	   });
+           });
+        });
+    </script>
 </body>
 </html>

@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1 class="mt-4">Add Guest</h1>
-        <form action="/guests/view/add" method="post">
+        <form id="addGuestForm">
             <div class="form-group">
                 <label for="firstName">First Name:</label>
                 <input type="text" class="form-control" id="firstName" name="firstName">
@@ -48,5 +48,29 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Function to handle form submission
+            $('#addGuestForm').submit(function(e) {
+                e.preventDefault(); // Prevent default form submission
+                
+                // Serialize form data
+                var formData = $(this).serialize();
+                
+                // Make AJAX request to submit form data
+                $.ajax({
+                    url: '/guests/view/add',
+                    type: 'POST',
+                    data: formData,
+                    success: function(data) {
+                        $('.content').html(data); // Replace content with response
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error); // Log any errors
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
