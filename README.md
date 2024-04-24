@@ -36,7 +36,7 @@ Usage<br />
 MVC Views: Navigate to the HTML views using a web browser to interact with the application's user interface.<br />
 REST API Endpoints: Send HTTP requests to the API endpoints using tools like cURL or Postman to interact with the application programmatically.<br />
 <br />
-Technologies Used:<br />
+<b>Technologies Used:</b><br />
 Java<br />
 Spring Boot<br />
 Spring MVC<br />
