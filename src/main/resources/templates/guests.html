@@ -15,6 +15,7 @@
             background-color: #f8f9fa;
             z-index: 1;
         }
+        .editGuestBtn {cursor: pointer;}
     </style>
 </head>
 <body>
@@ -33,22 +34,24 @@
                         <th>Country</th>
                         <th>State</th>
                         <th>Phone Number</th>
-                        <th colspan="2">Actions</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Iterate over each guest in the guests list -->
                     <tr th:each="guest : ${guestList}">
                         <!-- Display guest information in table cells -->
-                        <td th:text="${guest.id}">-</td>
-                        <td th:text="${guest.firstName}">-</td>
-                        <td th:text="${guest.lastName}">-</td>
-                        <td th:text="${guest.email}">-</td>
-                        <td th:text="${guest.country}">-</td>
-                        <td th:text="${guest.state}">-</td>
-                        <td th:text="${guest.phone}">-</td>
+                        <td class="guest-id" th:text="${guest.id}">-</td>
+                        <td class="guest-firstName editGuestBtn" title="Click here to update/delete this record" th:text="${guest.firstName}">-</td>
+                        <td class="guest-lastName editGuestBtn" title="Click here to update/delete this record" th:text="${guest.lastName}">-</td>
+                        <td class="guest-email editGuestBtn" title="Click here to update/delete this record" th:text="${guest.email}">-</td>
+                        <td class="guest-country editGuestBtn" title="Click here to update/delete this record" th:text="${guest.country}">-</td>
+                        <td class="guest-state editGuestBtn" title="Click here to update/delete this record" th:text="${guest.state}">-</td>
+                        <td class="guest-phone editGuestBtn" title="Click here to update/delete this record" th:text="${guest.phone}">-</td>
+                        <!-- 
                         <td><button class="btn btn-primary editGuestBtn" th:attr="data-guest-id=${guest.id}">Edit</button></td>
                         <td><button class="btn btn-danger deleteGuestBtn" th:attr="data-guest-id=${guest.id}">Delete</button></td>
+                        -->
                     </tr>
                 </tbody>
             </table>
@@ -77,29 +80,106 @@
 
             // Function to handle Edit Guest button click
             $(document).on('click', '.editGuestBtn', function() {
-                var roomId = $(this).data('guest-id');
+                var row = $(this).closest('tr');
+                var guestId = row.find('.guest-id').text();
+                var firstName = row.find('.guest-firstName').text();
+                var lastName  = row.find('.guest-lastName').text();
+                var email = row.find('.guest-email').text();
+                var country = row.find('.guest-country').text();
+                var sate = row.find('.guest-state').text();
+                var phone = row.find('.guest-phone').text();
+
+                //replace the row with text boxes
+                row.html('<td class="guest-id">' + guestId + '</td>'+
+                        '<td><input type="text" class="form-control guest-firstName" value="'+ firstName + '"></td>'+
+                        '<td><input type="text" class="form-control guest-lastName" value="'+ lastName + '"></td>'+
+                        '<td><input type="text" class="form-control guest-email" value="'+ email + '"></td>'+
+                        '<td><input type="text" class="form-control guest-country" value="'+ country + '"></td>'+
+                        '<td><input type="text" class="form-control guest-state" value="'+ sate + '"></td>'+
+                        '<td><input type="text" class="form-control guest-phone" value="'+ phone + '"></td>' +
+                         '<td>' +
+                         '<button class="btn btn-success btn-sm saveGuestBtn">Save</button>' +
+                         '<button class="btn btn-warning btn-sm cancelEditBtn">Cancel</button>' +
+                         '<button class="btn btn-danger btn-sm deleteGuestBtn">Delete</button>' +
+                         '</td>');
+            });
+
+            // handle the code for Cancel button
+            $(document).on('click', '.cancelEditBtn', function(){
+                var row = $(this).closest('tr');
+                var guestId = row.find('.guest-id').text();
+                var firstName = row.find('input.guest-firstName').val();
+                var lastName  = row.find('input.guest-lastName').val();
+                var email = row.find('input.guest-email').val();
+                var country = row.find('input.guest-country').val();
+                var sate = row.find('input.guest-state').val();
+                var phone = row.find('input.guest-phone').val();
+
+                // Restore original row content
+                row.html('<td class="guest-id">' + guestId + '</td>'+
+                        '<td class="guest-firstName editGuestBtn" title="Click here to update/delete this record">'+ firstName + '</td>'+
+                        '<td class="guest-lastName editGuestBtn" title="Click here to update/delete this record">'+ lastName + '</td>'+
+                        '<td class="guest-email editGuestBtn" title="Click here to update/delete this record">'+ email + '</td>'+
+                        '<td class="guest-country editGuestBtn" title="Click here to update/delete this record">'+ country + '</td>'+
+                        '<td class="guest-state editGuestBtn" title="Click here to update/delete this record">'+ sate + '</td>'+
+                        '<td class="guest-phone editGuestBtn" title="Click here to update/delete this record">'+ phone + '</td>');
+            });
+
+            // Function to handle Save button click
+            $(document).on('click','.saveGuestBtn', function() {
+                var row = $(this).closest('tr');
+                var guestId = row.find('.guest-id').text();
+                var firstName = row.find('input.guest-firstName').val();
+                var lastName = row.find('input.guest-lastName').val();
+                var email = row.find('input.guest-email').val();
+                var country = row.find('input.guest-country').val();
+                var state = row.find('input.guest-state').val();
+                var phone = row.find('input.guest-phone').val();
+                var formData = {
+                    id: guestId,
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    country: country,
+                    state: state,
+                    phone: phone
+                };
+
+                console.log(formData);
+                // Make AJAX request to update room
                 $.ajax({
-                    url: 'guests/view/edit/' + roomId,
-                    dataType: 'html',
+                    url: 'guests/view/edit',
+                    type: 'POST',
+                    data: formData,
                     success: function(data) {
-                        $('.content').html(data);
+                        // Restore original row content on success
+                        row.html('<td class="guest-id">' + guestId + '</td>'+
+                            '<td class="guest-firstName editGuestBtn" title="Click here to update/delete this record">'+ firstName + '</td>'+
+                            '<td class="guest-lastName editGuestBtn" title="Click here to update/delete this record">'+ lastName + '</td>'+
+                            '<td class="guest-email editGuestBtn" title="Click here to update/delete this record">'+ email + '</td>'+
+                            '<td class="guest-country editGuestBtn" title="Click here to update/delete this record">'+ country + '</td>'+
+                            '<td class="guest-state editGuestBtn" title="Click here to update/delete this record">'+ state + '</td>'+
+                            '<td class="guest-phone editGuestBtn" title="Click here to update/delete this record">'+ phone + '</td>');
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
                     }
-               });
+                });
             });
+                
            
            // Function to handle Delete button click
            $(document).on('click', '.deleteGuestBtn', function(){
-        	   var roomId = $(this).data('guest-id');
+               var row = $(this).closest('tr');
+        	   var guestId = row.find('.guest-id').text();
         	   
         	   // make AJAX request to delete guest
         	   $.ajax({
-        		   url: '/guests/view/delete/' + roomId,
+        		   url: '/guests/view/delete/' + guestId,
         		   type: 'POST',
         		   success: function(data){
-        			   $('.content').html(data);
+        			   // Remove the row from the table
+                       row.remove();
         		   },
         		   error: function(xhr, status, error) {
         			   console.error('Error:', error);

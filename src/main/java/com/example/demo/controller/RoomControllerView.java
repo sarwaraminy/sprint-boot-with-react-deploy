@@ -67,7 +67,7 @@ public class RoomControllerView {
 		
 		//update records
 		@PostMapping("/edit")
-		public String updateGuest(@ModelAttribute Room room, RedirectAttributes redirectAttributes) {
+		public String updateRoom(@ModelAttribute Room room, RedirectAttributes redirectAttributes) {
 			try {
 				roomService.saveRoom(room);
 				redirectAttributes.addFlashAttribute("successMessage", "Room updated successfully.");

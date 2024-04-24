@@ -15,6 +15,7 @@
             background-color: #f8f9fa;
             z-index: 1;
         }
+        .editRoomBtn {cursor: pointer;}
     </style>
 </head>
 <body>
@@ -30,19 +31,23 @@
                         <th>Room Name</th>
                         <th>Room Number</th>
                         <th>Bed Information</th>
-                        <th colspan="2">Actions</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Iterate over each room in the room list -->
-                    <tr th:each="room: ${roomList}">
+                    <tr th:each="room: ${roomList}" data-room-id="${room.id}">
                         <!-- Display room information in table cells -->
-                        <td th:text="${room.id}">-</td>
-                        <td th:text="${room.name}">-</td>
-                        <td th:text="${room.roomNumber}">-</td>
-                        <td th:text="${room.bedInfo}">-</td>
-                        <td><button class="btn btn-primary editRoomBtn" th:attr="data-room-id=${room.id}">Edit</button></td>
-                        <td><button class="btn btn-danger deleteRoomBtn" th:attr="data-room-id=${room.id}">Delete</button></td>
+                        <td class="room-id" th:text="${room.id}">-</td>
+                        <td class="room-name editRoomBtn" title="Click here to update/delete this record" th:text="${room.name}">-</td>
+                        <td class="room-number editRoomBtn" title="Click here to update/delete this record" th:text="${room.roomNumber}">-</td>
+                        <td class="bed-info editRoomBtn" title="Click here to update/delete this record" th:text="${room.bedInfo}">-</td>
+                        <!--
+                        <td>
+                            <button class="btn btn-primary editRoomBtn">Edit</button>
+                            <button class="btn btn-danger deleteRoomBtn">Delete</button>
+                        </td>
+                        -->
                     </tr>
                 </tbody>
             </table>
@@ -71,35 +76,91 @@
 
             // Function to handle Edit Room button click
             $(document).on('click', '.editRoomBtn', function() {
-                var roomId = $(this).data('room-id');
+                var row = $(this).closest('tr');
+                var roomId = row.find('.room-id').text();
+                var roomName = row.find('.room-name').text();
+                var roomNumber = row.find('.room-number').text();
+                var bedInfo = row.find('.bed-info').text();
+
+                // Replace row content with editable fields
+                row.html('<td class="room-id">' + roomId + '</td>' +
+                         '<td><input type="text" maxlength="16" class="form-control room-name" value="' + roomName + '"></td>' +
+                         '<td><input type="text" class="form-control room-number" value="' + roomNumber + '"></td>' +
+                         '<td><input type="text" class="form-control bed-info" value="' + bedInfo + '"></td>' +
+                         '<td>' +
+                         '<button class="btn btn-success btn-sm saveRoomBtn">Save</button>' +
+                         '<button class="btn btn-warning btn-sm cancelEditBtn">Cancel</button>' +
+                         '<button class="btn btn-danger btn-sm deleteRoomBtn">Delete</button>' +
+                         '</td>');
+            });
+
+            // Function to handle Cancel button click
+            $(document).on('click', '.cancelEditBtn', function() {
+                var row = $(this).closest('tr');
+                var roomId = row.find('.room-id').text();
+                var roomName = row.find('input.room-name').val();
+                var roomNumber = row.find('input.room-number').val();
+                var bedInfo = row.find('input.bed-info').val();
+
+                // Restore original row content
+                row.html('<td class="room-id">' + roomId + '</td>' +
+                         '<td title="Click here to update/delete this record" class="room-name editRoomBtn">' + roomName + '</td>' +
+                         '<td title="Click here to update/delete this record" class="room-number editRoomBtn">' + roomNumber + '</td>' +
+                         '<td title="Click here to update/delete this record" class="bed-info editRoomBtn">' + bedInfo + '</td>');
+            });
+            
+            // Function to handle Save button click
+            $(document).on('click', '.saveRoomBtn', function() {
+                var row = $(this).closest('tr');
+                var roomId = row.find('.room-id').text();
+                var roomName = row.find('input.room-name').val();
+                var roomNumber = row.find('input.room-number').val();
+                var bedInfo = row.find('input.bed-info').val();
+
+                var formData = {
+                    id: roomId,
+                    name: roomName,
+                    roomNumber: roomNumber,
+                    bedInfo: bedInfo
+                };
+
+                console.log(formData);
+                // Make AJAX request to update room
                 $.ajax({
-                    url: 'rooms/view/edit/' + roomId,
-                    dataType: 'html',
+                    url: 'rooms/view/edit',
+                    type: 'POST',
+                    data: formData,
                     success: function(data) {
-                        $('.content').html(data);
+                        // Restore original row content on success
+                        row.html('<td class="room-id">' + roomId + '</td>' +
+                                 '<td title="Click here to update/delete this record" class="room-name editRoomBtn">' + roomName + '</td>' +
+                                 '<td title="Click here to update/delete this record" class="room-number editRoomBtn">' + roomNumber + '</td>' +
+                                 '<td title="Click here to update/delete this record" class="bed-info editRoomBtn">' + bedInfo + '</td>');
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
                     }
-               });
+                });
             });
-           
-           // Function to handle Delete button click
-           $(document).on('click', '.deleteRoomBtn', function(){
-        	   var roomId = $(this).data('room-id');
-        	   
-        	   // make AJAX request to delete room
-        	   $.ajax({
-        		   url: '/rooms/view/delete/' + roomId,
-        		   type: 'POST',
-        		   success: function(data){
-        			   $('.content').html(data);
-        		   },
-        		   error: function(xhr, status, error) {
-        			   console.error('Error:', error);
-        		   }
-        	   });
-           });
+            
+            // Function to handle Delete button click
+            $(document).on('click', '.deleteRoomBtn', function() {
+                var row = $(this).closest('tr');
+                var roomId = row.find('.room-id').text();
+
+                // Make AJAX request to delete room
+                $.ajax({
+                    url: 'rooms/view/delete/' + roomId,
+                    type: 'POST',
+                    success: function(data) {
+                        // Remove the row from the table
+                        row.remove();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
         });
     </script>
 </body>
