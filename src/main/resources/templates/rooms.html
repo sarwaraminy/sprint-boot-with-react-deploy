@@ -21,7 +21,13 @@
 <body>
     <div class="container">
         <h1>Welcome to Room table data testing from MySQL</h1>
-        <div><button id="addRoomBtn" class="btn btn-success mb-3">Add a new Room</button></div>
+        <h3><div id="dataContainer"></div></h3>
+        <div>
+            <button id="addRoomBtn" class="btn btn-success mb-3">Add a new Room</button>
+            <button id="importToExcel" class="btn btn-success mb-3">Import to Excel</button>
+            <button id="importToPDF" class="btn btn-success mb-3">Import to PDF</button>
+        </div>
+        
         <!-- check if the room is empty -->
         <div class="scrollable-div">
             <table class="table">
@@ -73,6 +79,75 @@
                     }
                 });
             });
+
+            // Import data into Excel
+            $('#importToExcel').click(function() {
+                $.ajax({
+                    url: 'rooms/view/excel',
+                    type: 'GET',
+                    xhrFields: {
+                        responseType: 'blob' // Set the response type to 'blob' to handle binary data
+                    },
+                    success: function(response) {
+                        // Create a Blob object from the response data
+                        var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            
+                        // Create a temporary anchor element
+                        var a = document.createElement('a');
+                        var url = window.URL.createObjectURL(blob);
+                        a.href = url;
+                        a.download = 'room_data.xlsx'; // Set the file name for download
+                        document.body.appendChild(a);
+                        
+                        // Trigger a click event on the anchor element to initiate the download
+                        a.click();
+            
+                        // Remove the temporary anchor element
+                        document.body.removeChild(a);
+            
+                        // Release the object URL
+                        window.URL.revokeObjectURL(url);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            // Import data into PDF
+            $('#importToPDF').click(function() {
+                $.ajax({
+                    url: 'rooms/view/pdf', // Adjust the endpoint to generate PDF
+                    type: 'GET',
+                    xhrFields: {
+                        responseType: 'blob' // Set the response type to 'blob' to handle binary data
+                    },
+                    success: function(response) {
+                        // Create a Blob object from the response data
+                        var blob = new Blob([response], { type: 'application/pdf' });
+            
+                        // Create a temporary anchor element
+                        var a = document.createElement('a');
+                        var url = window.URL.createObjectURL(blob);
+                        a.href = url;
+                        a.download = 'room_data.pdf'; // Set the file name for download
+                        document.body.appendChild(a);
+                        
+                        // Trigger a click event on the anchor element to initiate the download
+                        a.click();
+            
+                        // Remove the temporary anchor element
+                        document.body.removeChild(a);
+            
+                        // Release the object URL
+                        window.URL.revokeObjectURL(url);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+            
 
             // Function to handle Edit Room button click
             $(document).on('click', '.editRoomBtn', function() {
