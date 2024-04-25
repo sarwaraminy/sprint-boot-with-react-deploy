@@ -126,19 +126,13 @@
                         // Create a Blob object from the response data
                         var blob = new Blob([response], { type: 'application/pdf' });
             
-                        // Create a temporary anchor element
-                        var a = document.createElement('a');
+                        // create a temporary object URL for the Blob
                         var url = window.URL.createObjectURL(blob);
-                        a.href = url;
-                        a.download = 'room_data.pdf'; // Set the file name for download
-                        document.body.appendChild(a);
                         
-                        // Trigger a click event on the anchor element to initiate the download
-                        a.click();
-            
-                        // Remove the temporary anchor element
-                        document.body.removeChild(a);
-            
+                        // Open the PDF content int a new broweser tab or window
+                        window.open(url, '_blank');
+                        
+                        
                         // Release the object URL
                         window.URL.revokeObjectURL(url);
                     },
