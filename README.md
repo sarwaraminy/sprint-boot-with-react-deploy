@@ -1,6 +1,6 @@
-Spring Boot MVC and REST API Project
+<b>Spring Boot MVC and REST API Project</b>
 
-Overview
+<b>Overview</b>
 
 This project demonstrates the implementation of a Spring Boot application that combines both MVC (Model-View-Controller) and REST API functionalities. The application interacts with a remote MySQL database and includes components such as entities, repositories, services, API controllers, and HTML views.<br />
 
@@ -39,9 +39,10 @@ HTML<br />
 Bootstrap<br />
 jQuery<br />
 RESTful API<br />
+JUnit 5 (for test cases)
 Thymeleaf<br />
 Apache POI (for Excel export)<br />
-iText (for PDF export)<br />
+Apache pdfbox (for PDF export)<br />
 <br />
 Credits<br />
 This project was created by Mohammad Sarwar. Feel free to contribute or provide feedback!<br />
