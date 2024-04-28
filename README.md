@@ -40,7 +40,7 @@ HTML<br />
 Bootstrap<br />
 jQuery<br />
 RESTful API<br />
-JUnit 5 (for test cases)
+JUnit 5 (for test cases)<br />
 Thymeleaf<br />
 Apache POI (for Excel export)<br />
 Apache pdfbox (for PDF export)<br />
