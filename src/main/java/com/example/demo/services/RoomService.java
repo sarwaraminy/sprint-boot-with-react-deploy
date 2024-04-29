@@ -2,6 +2,8 @@ package com.example.demo.services;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.demo.data.Room;
 
 public interface RoomService {
@@ -10,4 +12,5 @@ public interface RoomService {
 	Room getRoomById(long id);
 	Room saveRoom(Room room);
 	void deleteRoom(long id);
+	void loadExcelToRoom(MultipartFile file);
 }

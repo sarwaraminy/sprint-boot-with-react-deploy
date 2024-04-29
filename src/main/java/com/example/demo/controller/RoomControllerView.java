@@ -131,5 +131,9 @@ public class RoomControllerView {
 	        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
 	    }
 		
-	
+	    // upload excel file
+	    @GetMapping("/excel/upload")
+	    public String showUploadForm() {
+	    	return "excel-to-room";
+	    }
 }

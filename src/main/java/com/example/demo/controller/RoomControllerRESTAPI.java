@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.data.Room;
+import com.example.demo.output.ExcelToRoomUtility;
 import com.example.demo.services.RoomService;
 
 @RestController
@@ -75,6 +79,41 @@ public class RoomControllerRESTAPI {
 			return ResponseEntity.noContent().build();
 		}else {
 			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	//load excel content to Room table:
+	@PostMapping("/excel/upload")
+	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file){
+		String message = "";
+		if(ExcelToRoomUtility.hasExcelFormat(file)) {
+			try {
+				roomService.loadExcelToRoom(file);
+				message = "The Excel file is uploaded: " + file.getOriginalFilename();
+				return ResponseEntity.status(HttpStatus.OK).body(message);
+			} catch(Exception e) {
+				message = "The Excel file is not upload: " + file.getOriginalFilename();
+				return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+			}
+		}
+		message = "Please upload an Excel file!";
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+	}
+	
+	// show the uploaded file in view
+	@GetMapping("/excel/room-list")
+	public ResponseEntity<?> getRooms(){
+		Map<String, Object> respRoom = new LinkedHashMap<String, Object>();
+		List<Room> roomList = roomService.getAllRooms();
+		if(!roomList.isEmpty()) {
+			respRoom.put("status", 1);
+			respRoom.put("data", roomList);
+			return new ResponseEntity<>(respRoom, HttpStatus.OK);
+		}else {
+			respRoom.clear();
+			respRoom.put("status", 0);
+			respRoom.put("message", "Data is not found");
+			return new ResponseEntity<>(respRoom, HttpStatus.NOT_FOUND);
 		}
 	}
 }

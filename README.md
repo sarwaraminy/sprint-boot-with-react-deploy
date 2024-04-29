@@ -14,7 +14,8 @@ This project demonstrates the implementation of a Spring Boot application that c
 <b>Service Layer:</b> Implements service classes to encapsulate business logic and interact with repositories.<br />
 <b>API Controllers:</b> Defines controllers for handling REST API requests and responses.<br />
 <b>HTML Views:</b> Provides HTML views for rendering user interfaces in web browsers.<br />
-<b>JUnit Testing:</b> Provides unit testing in Java, it offers a set of tools and conventions that simplify the process of creating and executing tests, helping developers ensure the quality and correctness of their code.<br /><br />
+<b>JUnit Testing:</b> Provides unit testing in Java, it offers a set of tools and conventions that simplify the process of creating and executing tests, helping developers ensure the quality and correctness of their code.<br />
+<b>Multi Row Editor:</b> Allows users to edit records in Microsoft Excel and load them to the table.<br /><br />
 <b>Installation</b><br />
 1. Clone the repository to your local machine:<br />
 git clone https://github.com/sarwaraminy/spring-boot-mvc.git<br />

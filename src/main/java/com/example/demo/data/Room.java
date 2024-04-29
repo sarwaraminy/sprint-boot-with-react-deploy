@@ -1,5 +1,7 @@
 package com.example.demo.data;
 
+import java.util.Comparator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,8 +12,11 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="Room")
 
-public class Room {
+public class Room implements Comparable<Room>{
 
+	//create a sorting list
+	public static Comparator<Room> NAME_COMPARATOR = Comparator.comparing(Room::getName)
+			.thenComparing(Room::getRoomNumber);
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ROOM_ID")
@@ -55,6 +60,11 @@ public class Room {
 				", name='" + name + "'"
 				+ "', roomNumber='" + roomNumber + "'"+
 				", bedInfo='" + bedInfo + "'}";
+	}
+	@Override
+	public int compareTo(Room o) {
+		int result = this.getName().compareTo(o.getName());
+		return result != 0 ? result : this.getRoomNumber().compareTo(o.getRoomNumber());
 	}
 	
 	

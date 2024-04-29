@@ -1,13 +1,16 @@
 package com.example.demo.services;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.data.Room;
 import com.example.demo.data.RoomRepository;
+import com.example.demo.output.ExcelToRoomUtility;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -21,6 +24,9 @@ public class RoomServiceImpl implements RoomService {
 		Iterable<Room> iterable = roomRepository.findAll();
 		List<Room> roomList = new ArrayList<>();
 		iterable.forEach(roomList::add);
+		
+		// for sorting use static sort order
+		roomList.sort(Room.NAME_COMPARATOR);
 		return roomList;
 	}
 	
@@ -37,6 +43,19 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public void deleteRoom(long id) {
 		roomRepository.deleteById(id);
+	}
+
+	@Override
+	public void loadExcelToRoom(MultipartFile file) {
+		try {
+			List<Room> roomList = ExcelToRoomUtility.excelToRoomList(file.getInputStream());
+			ExcelToRoomUtility.displayRoomList(roomList);
+			roomRepository.saveAll(roomList);
+			
+		} catch (IOException ex) {
+			throw new RuntimeException("Excel data is failed to store: " + ex.getMessage());
+		}
+		
 	}
 
 }
