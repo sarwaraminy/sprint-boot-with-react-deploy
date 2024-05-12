@@ -7,6 +7,29 @@
   pointer-events: none;
 }
 
+.table-container {
+  height: 300px;
+  overflow-y: auto; /* Add vertical scrollbar if content exceeds container height */
+}
+
+.sticky-header th {
+  position: sticky;
+  top: 0;
+  background-color: #007bff; /* Change the background color to your preferred color */
+  color: white; /* Change the text color */
+}
+
+/* Center the nav */
+nav {
+  display: flex;
+  justify-content: center;
+}
+
+/* Remove bullets from the ul */
+ul {
+  list-style: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
