@@ -69,7 +69,7 @@ const RoomData = () => {
     return (
         <>
             <div className="container">
-                <h1>Room data as restful API, fetched by ReactJS</h1>
+                <h5>Explore Room Data: Fetched dynamically using ReactJS and RESTful API integration</h5>
                 <div className="table-container">
                     <table className="table">
                         <thead className="sticky-header">
