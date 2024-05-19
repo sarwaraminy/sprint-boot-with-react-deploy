@@ -26,7 +26,7 @@ import com.example.demo.services.RoomService;
 
 @RestController
 @RequestMapping(path="/rooms/api")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = FrontEndServer.FRONT_END_SERVER_ADDRESS)
 public class RoomControllerRESTAPI {
 
 	@Autowired
