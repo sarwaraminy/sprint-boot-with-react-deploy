@@ -19,13 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.FrontEndServer;
 import com.example.demo.data.Room;
 import com.example.demo.output.ExcelToRoomUtility;
 import com.example.demo.services.RoomService;
 
 @RestController
 @RequestMapping(path="/rooms/api")
-@CrossOrigin(origins = "http://localhost:3000/")
+@CrossOrigin(origins = "*")
 public class RoomControllerRESTAPI {
 
 	@Autowired
