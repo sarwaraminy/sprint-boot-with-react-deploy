@@ -18,7 +18,7 @@
   background-color: #007bff; /* Change the background color to your preferred color */
   color: white; /* Change the text color */
 }
-
+.editRoomBtn {cursor: pointer;}
 /* Center the nav */
 nav {
   display: flex;

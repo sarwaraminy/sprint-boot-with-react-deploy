@@ -85,23 +85,21 @@ const RoomData = () => {
                                 <tr key={room.id}>
                                     {editRoomId === room.id ? (
                                         <>
-                                          <td><input type="text" name="name" value={formData.name} onChange={handleInputChange} className="form-control" /></td>
-                                          <td><input type="text" name="roomNumber" value={formData.roomNumber} onChange={handleInputChange} className="form-control" /></td>
-                                          <td><input type="text" name="bedInfo" value={formData.bedInfo} onChange={handleInputChange} className="form-control" /></td>
+                                          <td><input type="text" className="form-control" name="name" value={formData.name} onChange={handleInputChange} /></td>
+                                          <td><input type="text" className="form-control" name="roomNumber" value={formData.roomNumber} onChange={handleInputChange} /></td>
+                                          <td><input type="text" className="form-control" name="bedInfo" value={formData.bedInfo} onChange={handleInputChange} /></td>
                                           <td>
                                             <button className="btn btn-success btn-sm" onClick={handleSaveClick}>Save</button>
                                             <button className="btn btn-warning btn-sm ml-2" onClick={handleCancelClick}>Cancel</button>
+                                            <button className="btn btn-danger btn-sm ml-2"  onClick={() => handleDeleteClick(room.id)}>Delete</button>
                                           </td>
                                         </>
                                     ) : (
                                         <>
-                                          <td>{room.name}</td>
-                                          <td>{room.roomNumber}</td>
-                                          <td>{room.bedInfo}</td>
-                                          <td>
-                                            <button className="btn btn-primary btn-sm" onClick={() => handleEditClick(room)}>Edit</button>
-                                            <button className="btn btn-danger btn-sm ml-2"  onClick={() => handleDeleteClick(room.id)}>Delete</button>
-                                          </td>
+                                          <td className='editRoomBtn'  title="Click here to update/delete this record" onClick={() => handleEditClick(room)}>{room.name}</td>
+                                          <td className='editRoomBtn'  title="Click here to update/delete this record" onClick={() => handleEditClick(room)}>{room.roomNumber}</td>
+                                          <td className='editRoomBtn'  title="Click here to update/delete this record" onClick={() => handleEditClick(room)}>{room.bedInfo}</td>
+                                          <td></td>
                                         </>
                                     )}
                                 </tr>
