@@ -1,12 +1,16 @@
 package com.example.demo.controller;
 
+import java.io.Console;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.FrontEndServer;
 import com.example.demo.data.Room;
 import com.example.demo.output.ExcelToRoomUtility;
+import com.example.demo.output.RoomToExcel;
+import com.example.demo.output.RoomToPDF;
 import com.example.demo.services.RoomService;
 
 @RestController
@@ -29,9 +35,12 @@ import com.example.demo.services.RoomService;
 @CrossOrigin(origins = FrontEndServer.FRONT_END_SERVER_ADDRESS)
 public class RoomControllerRESTAPI {
 
-	@Autowired
-	private RoomService roomService;
+	@Autowired	private RoomService roomService;
 	
+	@Autowired private RoomToExcel roomToExcel;
+
+	@Autowired private RoomToPDF roomToPDF;
+
 	//this method sends data as JSON When /rooms is called in URL
 	@GetMapping
 	public ResponseEntity<List<Room>> getAllRooms(){
@@ -51,8 +60,9 @@ public class RoomControllerRESTAPI {
 	}
 	
 	//create a method that can save data into Room table
-	@PostMapping
-	public ResponseEntity<Room> createRoom(@RequestParam Room room){
+	@PostMapping("/add")
+	public ResponseEntity<Room> createRoom(@RequestBody Room room){
+		System.out.println(room);
 		Room createRoom = roomService.saveRoom(room);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createRoom);
 	}
@@ -119,4 +129,30 @@ public class RoomControllerRESTAPI {
 			return new ResponseEntity<>(respRoom, HttpStatus.NOT_FOUND);
 		}
 	}
+
+	// create a method that handle the output to MS Excel
+	@GetMapping("/excel")
+	public ResponseEntity<byte[]> createExcelOutput() throws IOException {
+		List<Room> roomList = roomService.getAllRooms();
+	    byte[] excelBytes = roomToExcel.generateExcel(roomList);
+	    // Set Excel content type and headers
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+	    headers.setContentDispositionFormData("attachment", "room_data.xlsx");
+
+	    return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+	}
+	
+	// Your existing controller method
+	@GetMapping("/pdf")
+	public ResponseEntity<byte[]> createPDFOutput() throws IOException {
+	    List<Room> roomList = roomService.getAllRooms();
+	    byte[] pdfBytes = roomToPDF.generatePDF(roomList);
+	    // Set PDF content type and headers
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_PDF);
+	    headers.setContentDispositionFormData("attachment", "room_data.pdf");
+	    return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+	}
+	
 }

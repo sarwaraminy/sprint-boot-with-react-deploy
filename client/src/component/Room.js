@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import AddRoom from './Add_Room';
+import SearchRooms from './SearchRoom';
 
 const apiServer = process.env.REACT_APP_API_SERVER;
 console.log(apiServer);
 
 const RoomData = () => {
     const [roomList, setRoomList] = useState([]);
+    const [filteredRoomList, setFilteredRoomList] = useState([]);
     const [editRoomId, setEditRoomId] = useState(null);
     const [formData, setFormData] = useState({
         id: '',
@@ -13,6 +16,10 @@ const RoomData = () => {
         roomNumber: '',
         bedInfo: ''
     });
+
+    const [messages, setMessages] = useState('');
+
+    const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc'});
 
     useEffect(() => {
         fetchRoom();
@@ -22,6 +29,7 @@ const RoomData = () => {
         try{
             const response = await axios.get(`${apiServer}/rooms/api`);
             setRoomList(response.data);
+            setFilteredRoomList(response.data); // Set filtered list initially
         } catch (error) {
             console.error('Error fetching rooms:', error);
         }
@@ -52,36 +60,74 @@ const RoomData = () => {
             await axios.put(`${apiServer}/rooms/api/${formData.id}`, formData);
             fetchRoom();
             setEditRoomId(null);
+            setMessages("Record is updated Successfully!");
         } catch (error) {
-            console.error('Error saving room:', error);
+            setMessages('Error saving room: '+ error);
         }
     };
 
     const handleDeleteClick = async (roomId) => {
         try{
             await axios.delete(`${apiServer}/rooms/api/${roomId}`);
+            setMessages("Record is Deleted Successfully!");
             fetchRoom();
         } catch (error) {
-            console.error('Error deleting room:', error);
+            setMessages('Error saving room: '+ error);
         }
+    };
+
+    const sortRooms = (key) => {
+        let direction = "asc";
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+
+        const sortedRooms = [...roomList].sort((a, b) => {
+            if (a[key] < b[key]) {
+                return direction === 'asc' ? -1 : 1;
+            }
+            if (a[key] > b[key]) {
+                return direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+        setRoomList(sortedRooms);
+    };
+
+    const getSortArrow = (key) => {
+        if (sortConfig.key === key) {
+            return sortConfig.direction === 'asc' ? ' ▲' : ' ▼';
+        }
+        return '';
+    };
+
+    const handleSearch = (filteredRooms) => {
+        setFilteredRoomList(filteredRooms);
     };
 
     return (
         <>
+            <AddRoom fetchRoom={fetchRoom} />
+            
             <div className="container">
-                <h5>Explore Room Data: Fetched dynamically using ReactJS and RESTful API integration</h5>
+                <div className="row border-bottom mb-3">
+                    <div className="col-md-8">Explore Room Data: Fetched dynamically using ReactJS and RESTful API integration</div>
+                    <div className="col-md-4">{messages}</div>
+                </div>
+                <SearchRooms roomList  = {roomList} onSearch={handleSearch} />
                 <div className="table-container">
                     <table className="table">
                         <thead className="sticky-header">
                             <tr>
-                                <th>Name</th>
-                                <th>Room Number</th>
-                                <th>Bed Info</th>
+                                <th role="button" title="Click here to sort data" onClick={() => sortRooms('name')}>Name{getSortArrow('name')}</th>
+                                <th role="button" title="Click here to sort data" onClick={() => sortRooms('roomNumber')}>Room Number{getSortArrow('roomNumber')}</th>
+                                <th role="button" title="Click here to sort data" onClick={() => sortRooms('bedInfo')}>Bed Info{getSortArrow('bedInfo')}</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {roomList.map(room => (
+                            {filteredRoomList.map(room => (
                                 <tr key={room.id}>
                                     {editRoomId === room.id ? (
                                         <>
@@ -107,6 +153,7 @@ const RoomData = () => {
                         </tbody>
                     </table>
                 </div>
+                <div className="row mt-3"><div className="col-md-12 text-center font-weight-bold">Number of records: {roomList.length}</div></div>
             </div>
         </>
     );
