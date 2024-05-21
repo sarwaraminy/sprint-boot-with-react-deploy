@@ -61,19 +61,19 @@ const RoomData = () => {
             await axios.put(`${apiServer}/rooms/api/${formData.id}`, formData);
             fetchRoom();
             setEditRoomId(null);
-            setMessages("Record is updated Successfully!");
+            setMessages(`<font color="green">Record is updated Successfully!</font>`);
         } catch (error) {
-            setMessages('Error saving room: ' + error);
+            setMessages(`<font color="red">Error saving room: ${error}</font>`);
         }
     };
 
     const handleDeleteClick = async (roomId) => {
         try {
             await axios.delete(`${apiServer}/rooms/api/${roomId}`);
-            setMessages("Record is Deleted Successfully!");
+            setMessages(`<font color="green">Record is Deleted Successfully!</font>`);
             fetchRoom();
         } catch (error) {
-            setMessages('Error saving room: ' + error);
+            setMessages(`<font color="red">Error saving room: ${error}</font>`);
         }
     };
 
@@ -114,7 +114,7 @@ const RoomData = () => {
             <div className="container">
                 <div className="row border-bottom mb-3">
                     <div className="col-md-8">Explore Room Data: Fetched dynamically using ReactJS and RESTful API integration</div>
-                    <div className="col-md-4">{messages}</div>
+                    <div className="col-md-4" dangerouslySetInnerHTML={{ __html: messages }}></div>
                 </div>
                 <SearchRooms roomList={roomList} onSearch={handleSearch} />
                 <div className="table-container">
@@ -133,7 +133,7 @@ const RoomData = () => {
                                     {editRoomId === room.id ? (
                                         <>
                                             <td><input type="text" className="form-control" name="name" value={formData.name} onChange={handleInputChange} /></td>
-                                            <td><input type="text" className="form-control" name="roomNumber" value={formData.roomNumber} onChange={handleInputChange} /></td>
+                                            <td>{room.roomNumber}</td>
                                             <td><input type="text" className="form-control" name="bedInfo" value={formData.bedInfo} onChange={handleInputChange} /></td>
                                             <td>
                                                 <button className="btn btn-success btn-sm" onClick={handleSaveClick}>Save</button>
@@ -144,7 +144,7 @@ const RoomData = () => {
                                     ) : (
                                         <>
                                             <td className='editRoomBtn' title="Click here to update/delete this record" onClick={() => handleEditClick(room)}>{room.name}</td>
-                                            <td className='editRoomBtn' title="Click here to update/delete this record" onClick={() => handleEditClick(room)}>{room.roomNumber}</td>
+                                            <td>{room.roomNumber}</td>
                                             <td className='editRoomBtn' title="Click here to update/delete this record" onClick={() => handleEditClick(room)}>{room.bedInfo}</td>
                                             <td></td>
                                         </>

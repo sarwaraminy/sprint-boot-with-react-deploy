@@ -26,11 +26,11 @@ const AddRoom = ({ fetchRoom }) => {
         try{
             const response = await axios.post(`${apiServer}/rooms/api/add`, formData);
             // handle success response
-            setMessages(`Room added Successfully: ${response.data.name}` );
+            setMessages(`<font color="green">Room added Successfully: ${response.data.name}</font>` );
             setFormData({ name: '', roomNumber: '', bedInfo: '' });
             fetchRoom(); // Refresh the room list
         } catch (error) {
-            setMessages('Error adding room:', error);
+            setMessages(`<font color="red">Error adding room: ${error}</font>`);
         }
     };
 
@@ -38,7 +38,7 @@ const AddRoom = ({ fetchRoom }) => {
         <div className="container mb-2">
         <div className="row mt-2 border-bottom font-weight-bold">
            <div className="col-md-4">Add Room</div>
-           <div className="col-md-8">{messages}</div> 
+           <div className="col-md-8" dangerouslySetInnerHTML={{ __html: messages }}></div> 
         </div>
         <form id="addRoomForm" onSubmit = {handleSubmit}>
         <div className="form-row">
