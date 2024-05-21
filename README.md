@@ -38,11 +38,12 @@ Frontend Setup:<br />
 Navigate to the frontend directory.<br />
 
 Install dependencies:<br />
-
+npm install file-server<br />
+npm install axios<br />
+npm install react-router-dom <br />
 
 npm install<br />
 Start the React development server:<br />
-
 
 npm start<br />
 Access the Application:<br />

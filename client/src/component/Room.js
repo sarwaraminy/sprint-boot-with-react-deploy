@@ -53,6 +53,7 @@ const RoomData = () => {
     const handleCancelClick = () => {
         setEditRoomId(null);
         setFormData({ id: '', name: '', roomNumber: '', bedInfo: '' });
+        setMessages('');
     };
 
     const handleSaveClick = async () => {

@@ -39,8 +39,8 @@ const ExportButtons = () => {
 
   return (
     <div>
-      <button className="btn btn-danger mr-4" onClick={handleExportExcel}>Import to Excel</button>
-      <button className="btn btn-primary" onClick={handleExportPDF}>Import to PDF</button>
+      <button className="btn btn-primary mr-4" onClick={handleExportExcel}>Import to Excel</button>
+      <button className="btn btn-danger" onClick={handleExportPDF}>Import to PDF</button>
     </div>
   );
 };
