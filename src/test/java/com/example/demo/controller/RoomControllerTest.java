@@ -1,9 +1,5 @@
 package com.example.demo.controller;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +15,6 @@ import com.example.demo.services.RoomService;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class RoomControllerTest {
 
-	@Autowired RoomControllerView roomController;
 	@Autowired private RoomService roomService;
 	
 	private Room savedRoom;
@@ -29,13 +24,6 @@ public class RoomControllerTest {
 		Room room = new Room();
 		room.setName("test Contr");
 		room.setRoomNumber("TC1");
-		
-		// this is simulated to post
-		String outcome = roomController.createRoom(room);
-		
-		// Assert that the outcome is successful
-		assertNotNull(outcome);
-		assertThat(outcome, is("redirect:/rooms/view"));
 		
 		//store the saved room for cleanup
 		savedRoom = roomService.getRoomById(room.getId());

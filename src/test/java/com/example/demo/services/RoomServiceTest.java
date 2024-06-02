@@ -1,11 +1,11 @@
 package com.example.demo.services;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -35,7 +35,7 @@ public class RoomServiceTest {
 		//create a room
 		room = new Room();
 		room.setName("Inter Contental");
-		room.setRoomNumber("1G");
+		room.setRoomNumber("999");
 		
 		//save and see what is the return
 		savedRoom = roomService.saveRoom(room);
@@ -44,7 +44,7 @@ public class RoomServiceTest {
 		assertNotNull(savedRoom);
 		assertNotNull(savedRoom.getId());
 		assertEquals("Inter Contental", savedRoom.getName());
-		assertEquals("1G", savedRoom.getRoomNumber());
+		assertEquals("999", savedRoom.getRoomNumber());
 	}
 	
 	//clean the inserted data

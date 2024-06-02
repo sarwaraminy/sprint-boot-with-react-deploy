@@ -1,12 +1,14 @@
 package com.example.demo.controller;
 
-import java.io.Console;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +43,20 @@ public class RoomControllerRESTAPI {
 
 	@Autowired private RoomToPDF roomToPDF;
 
+	// Map all requests except those starting with "/room" to this method
+    @GetMapping(value = {"", "/", "/{path:^(?!room).*$}"})
+    public ResponseEntity serveIndexHtml() throws IOException {
+        Resource indexHtml = new ClassPathResource("static/build/index.html");
+        // Check if the resource exists
+        if (indexHtml.exists()) {
+            return ResponseEntity.ok().body(indexHtml.getInputStream().readAllBytes());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 	//this method sends data as JSON When /rooms is called in URL
-	@GetMapping
+	@GetMapping("/getAll")
 	public ResponseEntity<List<Room>> getAllRooms(){
 		List<Room> rooms = roomService.getAllRooms();
 		return ResponseEntity.ok(rooms);
@@ -154,5 +168,5 @@ public class RoomControllerRESTAPI {
 	    headers.setContentDispositionFormData("attachment", "room_data.pdf");
 	    return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
 	}
-	
+		
 }
