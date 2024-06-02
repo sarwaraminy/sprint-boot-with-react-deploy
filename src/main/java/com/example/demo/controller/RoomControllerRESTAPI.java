@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.example.FrontEndServer;
 import com.example.demo.data.Room;
 import com.example.demo.output.ExcelToRoomUtility;
@@ -35,6 +38,7 @@ import com.example.demo.services.RoomService;
 @RestController
 @RequestMapping(path="/rooms/api")
 @CrossOrigin(origins = FrontEndServer.FRONT_END_SERVER_ADDRESS)
+@Tag(name = "example", description = "Example API")
 public class RoomControllerRESTAPI {
 
 	@Autowired	private RoomService roomService;
@@ -55,6 +59,12 @@ public class RoomControllerRESTAPI {
         }
     }
 
+	@Operation(summary = "Get example data", description = "Returns example data")
+    @GetMapping("/api/example")
+    public String getExample() {
+        return "example data";
+    }
+	
 	//this method sends data as JSON When /rooms is called in URL
 	@GetMapping("/getAll")
 	public ResponseEntity<List<Room>> getAllRooms(){

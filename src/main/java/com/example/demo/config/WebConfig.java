@@ -9,9 +9,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // Forward requests to the main application entry point
+        // Forward all requests except those starting with /api or /swagger-ui
         registry.addViewController("/").setViewName("forward:/build/index.html");
         registry.addViewController("/{x:[\\w\\-]+}").setViewName("forward:/build/index.html");
-        registry.addViewController("/{x:^(?!api$|swagger-ui.*$).*$}/**/{y:[\\w\\-]+}").setViewName("forward:/build/index.html");
+        registry.addViewController("/{x:^(?!api$|swagger-ui$).*}/**/{y:[\\w\\-]+}").setViewName("forward:/build/index.html");
     }
 }
